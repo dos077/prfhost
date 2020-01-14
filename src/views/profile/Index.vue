@@ -1,12 +1,24 @@
 <template>
-  <nav-content :title="!!user ? 'Profile' : 'Login'" :bg-color="'#424242'">
-    <template v-slot:nav> </template>
+  <nav-content :title="!!user ? 'Profile' : 'Login'" :bg-color="'#4A148C'">
+    <template v-slot:nav>
+      <v-tabs
+        :vertical="isDesktop"
+        grow
+        background-color="rgba(0,0,0,0)"
+        :slider-size="isDesktop ? '0' : '2'"
+        active-class="current"
+        style="justify-content: center;"
+      >
+        <v-tab>Profile</v-tab>
+        <v-tab>Logout</v-tab>
+      </v-tabs>
+    </template>
     <template v-slot:content>
       <v-overlay :value="!networkOnLine" absolute>
         <v-card>
           <v-card-text>
             <p class="text-primary">
-              Please check your connection, login feature is not available
+              Please check your connection, user profile is not available
               offline.
             </p>
           </v-card-text>
@@ -14,13 +26,6 @@
       </v-overlay>
       <v-container fill-height>
         <v-row align-content="center" justify="center" style="height:100%;">
-          <v-alert v-if="loginError" type="error">
-            {{ loginError }}
-          </v-alert>
-          <v-btn light>
-            <v-icon>mdi-google</v-icon>
-            <span class="px-2">Sign in with Google</span>
-          </v-btn>
         </v-row>
       </v-container>
     </template>

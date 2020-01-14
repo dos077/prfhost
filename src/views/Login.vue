@@ -1,26 +1,49 @@
 <template>
-  <div class="page-wrapper">
-    <h1 class="login-page-title">Login page</h1>
+  <v-container fill-height>
+    <v-row align-content="center" justify="center" style="height:100%;">
+      <v-col cols="12" class="text-center">
+        <v-card max-width="480" style="margin: 0 auto;">
+          <v-toolbar color="primary" dark flat>
+            <v-toolbar-title>
+              Please Sign In
+            </v-toolbar-title>
+          </v-toolbar>
+          <v-card-text class="py-4 pb-8">
+            <!-- Loader -->
+            <v-alert v-show="user === undefined" color="info">
+              Authenticating...
+            </v-alert>
 
-    <!-- Loader -->
-    <div v-show="user === undefined" data-test="loader">Authenticating...</div>
+            <!-- Offline instruction -->
+            <v-alert
+              v-show="!networkOnLine"
+              data-test="offline-instruction"
+              color="error"
+            >
+              Please check your connection, login feature is not available
+              offline.
+            </v-alert>
 
-    <!-- Offline instruction -->
-    <div v-show="!networkOnLine" data-test="offline-instruction">
-      Please check your connection, login feature is not available offline.
-    </div>
-
-    <p v-if="loginError">{{ loginError }}</p>
-    <!-- Auth UI -->
-    <div
-      v-show="user !== undefined && !user && networkOnLine"
-      data-test="login-btn"
-      class="login-btn"
-      @click="login"
-    >
-      Login with google
-    </div>
-  </div>
+            <v-alert v-show="loginError" color="error">{{
+              loginError
+            }}</v-alert>
+            <!-- Auth UI -->
+            <v-btn
+              light
+              :disabled="user === undefined || user || !networkOnLine"
+              data-test="login-btn"
+              large
+              @click="login"
+            >
+              <v-icon>mdi-google</v-icon>
+              <span class="px-2">Sign in with google</span>
+            </v-btn>
+            <v-spacer />
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -86,32 +109,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '@/theme/variables.scss';
-
-.page-wrapper {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-
-  .login-page-title {
-    text-align: center;
-  }
-
-  .login-btn {
-    margin-top: 20px;
-    cursor: pointer;
-    padding: 5px 20px;
-    border: 1px solid;
-    display: inline-block;
-    border-radius: 3px;
-    border-color: #2c3e50;
-
-    &:hover {
-      color: $vue-color;
-      border-color: $vue-color;
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>
