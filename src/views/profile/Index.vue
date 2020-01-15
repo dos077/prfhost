@@ -1,5 +1,5 @@
 <template>
-  <nav-content :title="!!user ? 'Profile' : 'Login'" :bg-color="'#4A148C'">
+  <nav-content title="Account" :bg-color="'#4A148C'">
     <template v-slot:nav>
       <v-tabs
         :vertical="isDesktop"
@@ -24,8 +24,31 @@
           </v-card-text>
         </v-card>
       </v-overlay>
-      <v-container fill-height>
-        <v-row align-content="center" justify="center" style="height:100%;">
+      <v-container v-if="user" style="max-width: 1280px">
+        <v-row>
+          <v-col cols="12" style="text-align: center">
+            <v-avatar height="120" width="120" style="margin: 0 auto 2rem">
+              <img :src="user.photoURL" />
+            </v-avatar>
+            <h1 class="headline">{{ user.displayName }}</h1>
+            <h2 class="subtitle-1" style="color: #616161;">{{ user.email }}</h2>
+            <v-card
+              style="max-width: 480px; margin: 2rem auto; background-color: rgba(0,0,0,0)"
+              outlined
+            >
+              <v-card-title>
+                Profile Customization
+              </v-card-title>
+              <v-card-text>
+                <v-form>
+                  <v-text-field
+                    label="Alias"
+                    hint="an alias for web directory"
+                  />
+                </v-form>
+              </v-card-text>
+            </v-card>
+          </v-col>
         </v-row>
       </v-container>
     </template>
@@ -51,19 +74,6 @@ export default {
     },
     ...mapState('app', ['networkOnLine', 'appTitle']),
     ...mapState('authentication', ['user'])
-  },
-  watch: {
-    user: {
-      handler(user) {
-        if (user) {
-          const redirectUrl = !this.$route.query.redirectUrl
-            ? '/'
-            : this.$route.query.redirectUrl
-          this.$router.push(redirectUrl)
-        }
-      },
-      immediate: true
-    }
   },
   methods: {
     ...mapMutations('authentication', ['setUser']),
