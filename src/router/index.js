@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Head from 'vue-head'
 import Home from '@/views/Home'
 import CheckLogin from '@/views/CheckLogin'
+import store from '@/store'
 
 Vue.use(Router)
 
@@ -50,9 +51,14 @@ const router = new Router({
         import(/* webpackChunkName: "client-chunk-account" */ '@/views/profile/Index.vue')
     },
     {
-      path: '/gallery',
-      name: 'gallery',
-      component: () => import('@/views/Gallery.vue')
+      path: '/galleries',
+      name: 'galleries',
+      component: () => import('@/views/Gallery/Index.vue'),
+      beforeEnter() {
+        if (!store.state.galleries.items) {
+          store.dispatch('galleries/getAll', null)
+        }
+      }
     },
     { path: '*', redirect: '/home' }
   ]
@@ -62,11 +68,10 @@ const router = new Router({
  * Handle user redirections
  */
 // eslint-disable-next-line consistent-return
-/*
 router.beforeEach((to, from, next) => {
   if (
     !(to.meta && to.meta.authNotRequired) &&
-    isNil(store.state.authentication.user)
+    store.state.authentication.user == null
   ) {
     const path =
       store.state.authentication.user === null ? '/login' : '/check-login'
@@ -74,6 +79,5 @@ router.beforeEach((to, from, next) => {
   }
   next()
 })
-*/
 
 export default router
