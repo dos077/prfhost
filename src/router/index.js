@@ -17,7 +17,7 @@ Vue.use(Head, {
 
 const router = new Router({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: '/',
   routes: [
     {
       path: '/home',
@@ -53,12 +53,17 @@ const router = new Router({
     {
       path: '/galleries',
       name: 'galleries',
-      component: () => import('@/views/Gallery/Index.vue'),
-      beforeEnter() {
-        if (!store.state.galleries.items) {
-          store.dispatch('galleries/getAll', null)
+      component: () =>
+        import(/* webpackChunkName: "client-chunk-account" */ '@/views/Gallery/Index.vue'),
+      children: [
+        {
+          path: '/',
+          component: () => import('@/views/Gallery/_notice.vue')
+        },
+        {
+          path: '/:gid'
         }
-      }
+      ]
     },
     { path: '*', redirect: '/home' }
   ]
@@ -67,7 +72,7 @@ const router = new Router({
 /**
  * Handle user redirections
  */
-// eslint-disable-next-line consistent-return
+
 router.beforeEach((to, from, next) => {
   if (
     !(to.meta && to.meta.authNotRequired) &&
@@ -75,9 +80,10 @@ router.beforeEach((to, from, next) => {
   ) {
     const path =
       store.state.authentication.user === null ? '/login' : '/check-login'
-    return next(`${path}?redirectUrl=${to.path}`)
+    next(`${path}?redirectUrl=${to.path}`)
+  } else {
+    next()
   }
-  next()
 })
 
 export default router

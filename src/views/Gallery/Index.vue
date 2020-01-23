@@ -15,8 +15,7 @@
       </v-tabs>
     </template>
     <template v-slot:content>
-      <h1 class="display-2">No gallery selected for edit</h1>
-      <v-btn>new gallery<v-icon>mdi-new</v-icon></v-btn>
+      <router-view></router-view>
     </template>
   </nav-content>
 </template>
@@ -24,6 +23,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex'
 import NavContent from '@/views/components/NavContent.vue'
+import store from '@/store'
 
 export default {
   name: 'Galleries',
@@ -34,6 +34,11 @@ export default {
     ...mapState('app', ['networkOnline']),
     isDesktop() {
       return this.$vuetify.breakpoint.mdAndUp
+    }
+  },
+  created() {
+    if (!store.state.galleries.items) {
+      store.dispatch('galleries/getAll')
     }
   }
 }
