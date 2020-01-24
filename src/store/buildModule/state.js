@@ -1,6 +1,6 @@
 export default () => ({
   items: null,
-  current: null,
+  current: undefined,
   nameToCreate: '',
   deletionPending: [],
   creationPending: false,

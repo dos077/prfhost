@@ -9,7 +9,11 @@
         active-class="current"
         style="justify-content: center;"
       >
-        <v-tab v-for="gallery in galleries" :key="gallery.id">
+        <v-tab
+          v-for="gallery in galleries"
+          :key="gallery.id"
+          :to="`/galleries/edit/${gallery.id}`"
+        >
           {{ gallery.name }}
         </v-tab>
       </v-tabs>

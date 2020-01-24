@@ -52,20 +52,22 @@ const router = new Router({
     },
     {
       path: '/galleries',
-      name: 'galleries',
       component: () =>
-        import(/* webpackChunkName: "client-chunk-account" */ '@/views/Gallery/Index.vue'),
+        import(/* webpackChunkName: "client-chunk-account" */ '@/views/gallery/index.vue'),
       children: [
         {
-          path: '/',
-          component: () => import('@/views/Gallery/_notice.vue')
+          path: '',
+          name: 'galleries',
+          component: () => import('@/views/gallery/notice.vue')
         },
         {
-          path: '/:gid'
+          path: 'edit/:gid',
+          name: 'gallery-edit',
+          component: () => import('@/views/gallery/edit.vue')
         }
       ]
-    },
-    { path: '*', redirect: '/home' }
+    }
+    // { path: '*', redirect: '/home' }
   ]
 })
 
