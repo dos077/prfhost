@@ -1,15 +1,20 @@
 <template>
-  <gallery-form :gallery="gallery" />
+  <div>
+    <gallery-form :gallery="gallery" />
+    <image-grid :gallery="gallery" />
+  </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
 import GalleryForm from './_form.vue'
+import ImageGrid from './_imgGrid.vue'
 
 export default {
   name: 'GalleryEdit',
   components: {
-    GalleryForm
+    GalleryForm,
+    ImageGrid
   },
   computed: {
     ...mapState('galleries', { gallery: 'current' })
@@ -24,7 +29,7 @@ export default {
   },
   mounted() {
     if (this.$route.params.gid) this.read(this.$route.params.gid)
-    // else this.$router.push({ path: '/galleries' })
+    else this.$router.push({ path: '/galleries' })
   },
   methods: {
     ...mapActions('galleries', { read: 'read' }),

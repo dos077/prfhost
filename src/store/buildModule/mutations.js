@@ -10,6 +10,12 @@ export default () => ({
 
   add: (state, item) => state.items.push(item),
 
+  update: (state, item) => {
+    const index = state.items.findIndex(e => e.id === item.id)
+    if (index > -1) state.items[index] = item
+    if (state.current && state.current.id === item.id) state.current = item
+  },
+
   removeById: (state, id) => {
     const index = state.items.findIndex(i => i.id === id)
     state.items.splice(index, 1)
@@ -17,7 +23,7 @@ export default () => ({
 
   addUpdatePending: (state, id) => state.deletionPending.push(id),
 
-  remoteUpdatePending: (state, id) => {
+  removeUpdatePending: (state, id) => {
     const index = state.updatePending.findIndex(i => i === id)
     state.updatePending.splice(index, 1)
   },

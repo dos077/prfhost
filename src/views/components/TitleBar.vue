@@ -14,6 +14,7 @@ export default {
 <style lang="scss" scoped>
 .title-bar {
   position: sticky;
+  z-index: 5;
   top: 0;
   display: flex;
   align-items: center;

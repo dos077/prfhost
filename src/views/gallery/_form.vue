@@ -2,7 +2,7 @@
   <v-card outlined class="ma-4" :loading="!gallery">
     <v-form v-if="gallery">
       <v-card-title>
-        <v-text-field v-model="gallery.name" label="Title" />
+        <v-text-field :value="gallery.name" label="Title" @input="nameInput" />
       </v-card-title>
       <v-card-text>
         <v-file-input
@@ -27,29 +27,35 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import asyncStorage from '@/firebase/async-storage'
+import storage from '@/helpers/galleries/storage'
 
 export default {
   name: 'GalleryForm',
-  props: {
-    gallery: Object
-  },
   data: () => ({
-    imageFile: null
+    imageFile: null,
+    newName: null
   }),
   computed: {
-    ...mapState('authentication', ['user'])
+    ...mapState('authentication', ['user']),
+    ...mapState('galleries', { gallery: 'current' })
   },
   methods: {
     ...mapActions('galleries', ['create', 'update']),
-    changeFile(file) {
+    async changeFile(file) {
       this.imageFile = file
     },
+    nameInput(value) {
+      this.newName = value
+    },
     async upload() {
-      const storageRef = (await asyncStorage()).ref()
-      const imagesRef = storageRef.child(`user/${this.user.id}/images`)
-      console.log(imagesRef)
-      console.log(this.imageFile)
+      const imgFile = this.imageFile
+      const userId = this.user.id
+      const uploadedImg = await storage.upload({ imgFile, userId })
+      const images = this.gallery.images
+        ? [uploadedImg, ...this.gallery.images]
+        : [uploadedImg]
+      const { name, id, createTimestamp } = this.gallery
+      this.update({ images, name, id, createTimestamp })
     },
     async save() {
       if (this.gallery.id) {

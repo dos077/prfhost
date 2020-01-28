@@ -33,8 +33,8 @@ export default ({ loadCollectionDB }) => {
       const collectionDB = loadCollectionDB({ rootState })
 
       commit('addUpdatePending', item.id)
-      await collectionDB.update(item)
-      commit('update', item)
+      const updated = await collectionDB.update(item)
+      commit('update', updated)
       commit('removeUpdatePending', item.id)
     },
 

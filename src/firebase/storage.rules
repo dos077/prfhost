@@ -1,3 +1,4 @@
+rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
     // Files look like: "user/<UID>/path/to/file.txt"

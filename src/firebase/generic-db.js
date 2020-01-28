@@ -94,15 +94,21 @@ export default class GenericDB {
     const clonedData = cloneDeep(data)
     delete clonedData.id
 
+    const updateTimestamp = firebase.firestore.FieldValue.serverTimestamp()
+
     await (await firestore())
       .collection(this.collectionPath)
       .doc(id)
       .update({
         ...clonedData,
-        updateTimestamp: firebase.firestore.FieldValue.serverTimestamp()
+        updateTimestamp
       })
 
-    return id
+    return {
+      id,
+      ...clonedData,
+      updateTimestamp
+    }
   }
 
   /**
