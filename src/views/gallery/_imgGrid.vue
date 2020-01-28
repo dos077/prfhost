@@ -2,7 +2,11 @@
   <v-container class="mx-1">
     <v-item-group v-if="gallery">
       <v-row>
-        <v-item v-for="image in gallery.images" :key="image.path">
+        <v-item
+          v-for="image in gallery.images"
+          :key="image.path"
+          :loading="loading"
+        >
           <v-col cols="12" sm="6" xl="4">
             <image-grid-cell :image="image" />
           </v-col>
@@ -21,7 +25,8 @@ export default {
     ImageGridCell
   },
   props: {
-    gallery: Object
+    gallery: Object,
+    loading: Boolean
   }
 }
 </script>

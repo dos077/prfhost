@@ -1,7 +1,7 @@
 <template>
-  <v-card outlined :loading="imgSrc === ''">
+  <v-card outlined :loading="loading || imgSrc === ''">
     <v-dialog v-model="dConfirm" :width="isDesktop ? '500px' : '80vw'">
-      <v-card dark="">
+      <v-card dark="" :loading="loading">
         <v-card-title> Press confirm to delete {{ image.title }} </v-card-title>
         <v-card-actions>
           <v-spacer />
@@ -34,11 +34,14 @@ import { mapActions } from 'vuex'
 export default {
   name: 'ImageGridCell',
   props: {
-    image: Object
+    image: Object,
+    loading: Boolean
   },
   data: () => ({
     imgSrc: '',
-    dConfirm: false
+    dConfirm: false,
+    newTitle: null,
+    newCap: null
   }),
   computed: {
     isDesktop() {
@@ -52,6 +55,7 @@ export default {
     ...mapActions('galleries', { deleteImage: 'deleteImage' }),
     confirmDelete() {
       this.deleteImage(this.image)
+      this.dConfirm = false
     }
   }
 }

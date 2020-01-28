@@ -1,7 +1,7 @@
 <template>
   <div>
-    <gallery-form :gallery="gallery" />
-    <image-grid :gallery="gallery" />
+    <gallery-form :gallery="gallery" :loading="loading" />
+    <image-grid :gallery="gallery" :loading="loading" />
   </div>
 </template>
 
@@ -17,7 +17,15 @@ export default {
     ImageGrid
   },
   computed: {
-    ...mapState('galleries', { gallery: 'current' })
+    ...mapState('galleries', {
+      gallery: 'current',
+      updatePending: 'updatePending'
+    }),
+    loading() {
+      return (
+        this.gallery == null || this.updatePending.includes(this.gallery.id)
+      )
+    }
   },
   watch: {
     gallery: {

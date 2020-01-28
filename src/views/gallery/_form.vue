@@ -1,5 +1,5 @@
 <template>
-  <v-card outlined class="ma-4" :loading="!gallery">
+  <v-card outlined class="ma-4" :loading="loading">
     <v-form v-if="gallery">
       <v-card-title>
         <v-text-field :value="gallery.name" label="Title" @input="nameInput" />
@@ -27,20 +27,23 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import storage from '@/helpers/galleries/storage'
 
 export default {
   name: 'GalleryForm',
+  props: {
+    gallery: Object,
+    loading: Boolean
+  },
   data: () => ({
     imageFile: null,
-    newName: null
+    newName: null,
+    uploading: false
   }),
   computed: {
-    ...mapState('authentication', ['user']),
-    ...mapState('galleries', { gallery: 'current' })
+    ...mapState('authentication', ['user'])
   },
   methods: {
-    ...mapActions('galleries', ['create', 'update']),
+    ...mapActions('galleries', ['create', 'update', 'addImage']),
     async changeFile(file) {
       this.imageFile = file
     },
@@ -48,14 +51,10 @@ export default {
       this.newName = value
     },
     async upload() {
-      const imgFile = this.imageFile
-      const userId = this.user.id
-      const uploadedImg = await storage.upload({ imgFile, userId })
-      const images = this.gallery.images
-        ? [uploadedImg, ...this.gallery.images]
-        : [uploadedImg]
-      const { name, id, createTimestamp } = this.gallery
-      this.update({ images, name, id, createTimestamp })
+      if (this.imageFile) {
+        await this.addImage(this.imageFile)
+        this.imageFile = null
+      }
     },
     async save() {
       if (this.gallery.id) {
