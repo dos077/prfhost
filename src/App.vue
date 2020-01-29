@@ -2,14 +2,14 @@
   <v-app>
     <v-navigation-drawer v-model="drawerOn" app dark color="#212121">
       <v-list>
-        <v-list-item link>
-          One
+        <v-list-item link to="/galleries">
+          Photography
         </v-list-item>
-        <v-list-item link>
-          Two
+        <v-list-item link to="/profolio">
+          Web Development
         </v-list-item>
-        <v-list-item link>
-          Three
+        <v-list-item link to="/account">
+          Account
         </v-list-item>
       </v-list>
     </v-navigation-drawer>

@@ -46,10 +46,10 @@ export default ({ loadCollectionDB }) => {
 
       const collectionDB = loadCollectionDB({ rootState })
 
-      commit('addDeletionPending', id)
+      commit('addUpdatePending', id)
       await collectionDB.delete(id)
       commit('removeById', id)
-      commit('removeDeletionPending', id)
+      commit('removeUpdatePending', id)
     }
   }
 }

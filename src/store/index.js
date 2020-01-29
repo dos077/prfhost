@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import authentication from './authentication'
 import app from './app'
 import galleries from './galleries'
+import profolio from './profolio'
 
 Vue.use(Vuex)
 
@@ -13,6 +14,7 @@ export default new Vuex.Store({
   modules: {
     authentication,
     app,
-    galleries
+    galleries,
+    profolio
   }
 })

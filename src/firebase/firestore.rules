@@ -8,7 +8,14 @@ service cloud.firestore {
        allow update, delete: if authenticated() && request.auth.uid == userId;
     }
 
-    match /users/{userId}/products/{productId} {
+    match /users/{userId}/profolio/{projectId} {
+      allow get: if authenticated() && request.auth.uid == userId;
+			allow list: if authenticated() && request.auth.uid == userId;
+      allow create: if authenticated() && request.auth.uid == userId;
+      allow update, delete: if authenticated() && request.auth.uid == userId;
+    }
+
+    match /users/{userId}/galleries/{galleryId} {
       allow get: if authenticated() && request.auth.uid == userId;
 			allow list: if authenticated() && request.auth.uid == userId;
       allow create: if authenticated() && request.auth.uid == userId;

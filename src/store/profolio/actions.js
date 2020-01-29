@@ -1,8 +1,16 @@
 import storage from '@/helpers/galleries/storage'
 
+const makeBlank = () => ({
+  name: 'Untitled',
+  sections: null,
+  github: null,
+  demo: null,
+  bannerImage: null
+})
+
 export default ({ loadCollectionDB }) => ({
   createBlank: async ({ rootState, commit }) => {
-    const blank = { name: 'Untitled', images: null }
+    const blank = makeBlank
     commit('setCreationPending', true)
 
     const collectionDB = loadCollectionDB({ rootState })
@@ -11,6 +19,20 @@ export default ({ loadCollectionDB }) => ({
     commit('add', created)
     commit('setCurrent', created)
     commit('setCreationPending', false)
+  },
+  addBanner: async ({ state, rootState, commit }, imgFile) => {
+    const userId = rootState.authentication.user.id
+    const { current } = state
+    commit('addUpdatePending', current.id)
+
+    const bannerImage = await storage.upload({ imgFile, userId })
+    const clone = { ...current }
+    clone.bannerImage = bannerImage
+
+    const collectionDB = loadCollectionDB({ rootState })
+    const updated = await collectionDB.update(clone)
+    commit('update', updated)
+    commit('removeUpdatePending', current.id)
   },
   addImage: async ({ state, rootState, commit }, imgFile) => {
     const userId = rootState.authentication.user.id

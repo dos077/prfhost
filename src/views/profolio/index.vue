@@ -1,5 +1,5 @@
 <template>
-  <nav-content title="Gallery" :bg-color="'#616161'">
+  <nav-content title="Profolio" :bg-color="'#EF6C00'">
     <template v-slot:nav>
       <v-tabs
         :vertical="isDesktop"
@@ -10,11 +10,11 @@
         style="justify-content: center;"
       >
         <v-tab
-          v-for="gallery in galleries"
-          :key="gallery.id"
-          :to="`/galleries/edit/${gallery.id}`"
+          v-for="project in profolio"
+          :key="project.id"
+          :to="`/profolio/edit/${project.id}`"
         >
-          {{ gallery.name }}
+          {{ project.name }}
         </v-tab>
       </v-tabs>
     </template>
@@ -25,24 +25,23 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapState } from 'vuex'
 import NavContent from '@/views/components/NavContent.vue'
 import store from '@/store'
 
 export default {
-  name: 'Galleries',
+  name: 'Profolio',
   components: { NavContent },
   computed: {
-    ...mapGetters('galleries', ['isDeletionPending']),
-    ...mapState('galleries', { galleries: 'items' }),
+    ...mapState('profolio', { profolio: 'items' }),
     ...mapState('app', ['networkOnline']),
     isDesktop() {
       return this.$vuetify.breakpoint.mdAndUp
     }
   },
   created() {
-    if (!store.state.galleries.items) {
-      store.dispatch('galleries/getAll')
+    if (!store.state.profolio.items) {
+      store.dispatch('profolio/getAll')
     }
   }
 }

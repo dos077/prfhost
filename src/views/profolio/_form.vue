@@ -1,9 +1,9 @@
 <template>
   <v-card outlined class="ma-4" :loading="loading">
-    <v-dialog v-if="gallery" v-model="dConfirm" width="80vw" max-width="500px">
+    <v-dialog v-if="project" v-model="dConfirm" width="80vw" max-width="500px">
       <v-card dark="" :loading="loading">
         <v-card-title>
-          Press confirm to delete {{ gallery.name }}
+          Press confirm to delete {{ project.name }}
         </v-card-title>
         <v-card-actions>
           <v-spacer />
@@ -12,19 +12,29 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-form v-if="gallery">
+    <v-form v-if="project">
       <v-card-title>
-        <v-text-field :value="gallery.name" label="Title" @input="nameInput" />
+        <v-text-field :value="project.name" label="Title" @input="nameInput" />
       </v-card-title>
       <v-card-text>
         <v-file-input
           v-model="imageFile"
           accept="image/jpeg"
           placeholder="select a file for upload"
-          label="Upload Image"
+          label="Change Banner Image"
           prepend-icon="mdi-camera"
         />
-        <v-btn color="blue" text @click="upload">upload</v-btn>
+        <v-btn color="blue" text @click="upload">upload</v-btn
+        ><v-text-field
+          :value="project.github"
+          label="Github"
+          @input="githubInput"
+        />
+        <v-text-field
+          :value="project.demo"
+          label="Demo Link"
+          @input="demoInput"
+        />
       </v-card-text>
     </v-form>
     <v-card-actions>
@@ -41,14 +51,16 @@
 import { mapActions, mapState } from 'vuex'
 
 export default {
-  name: 'GalleryForm',
+  name: 'ProjectForm',
   props: {
-    gallery: Object,
+    project: Object,
     loading: Boolean
   },
   data: () => ({
     imageFile: null,
     newName: null,
+    newDemo: null,
+    newGithub: null,
     uploading: false,
     dConfirm: false
   }),
@@ -56,10 +68,10 @@ export default {
     ...mapState('authentication', ['user'])
   },
   methods: {
-    ...mapActions('galleries', {
+    ...mapActions('profolio', {
       update: 'update',
-      deleteGallery: 'delete',
-      addImage: 'addImage'
+      deleteProject: 'delete',
+      addBanner: 'addBanner'
     }),
     async changeFile(file) {
       this.imageFile = file
@@ -67,22 +79,31 @@ export default {
     nameInput(value) {
       this.newName = value
     },
+    githubInput(value) {
+      this.newGithub = value
+    },
+    demoInput(value) {
+      this.newDemo = value
+    },
     async upload() {
       if (this.imageFile) {
-        await this.addImage(this.imageFile)
+        await this.addBanner(this.imageFile)
         this.imageFile = null
       }
     },
     async save() {
-      if (this.newName) {
-        const { id, createTimestamp, images } = this.gallery
-        await this.update({ name: this.newName, id, createTimestamp, images })
+      if (this.newName || this.newDemo || this.newGithub) {
+        const clone = { ...this.project }
+        if (this.newName) clone.name = this.newName
+        if (this.newDemo) clone.demo = this.newDemo
+        if (this.newGithub) clone.github = this.newGithub
+        await this.update(clone)
       }
-      this.$router.push('/galleries')
+      this.$router.push('/profolio')
     },
     async confirmDelete() {
-      await this.deleteGallery(this.gallery.id)
-      this.$router.push('/galleries')
+      await this.deleteProject(this.project.id)
+      this.$router.push('/profolio')
     }
   }
 }

@@ -19,30 +19,35 @@ export default {
   computed: {
     ...mapState('galleries', {
       gallery: 'current',
-      updatePending: 'updatePending'
+      updatePending: 'updatePending',
+      creationPending: 'creationPending'
     }),
     loading() {
       return (
-        this.gallery == null || this.updatePending.includes(this.gallery.id)
+        this.gallery == null ||
+        this.creationPending ||
+        this.updatePending.includes(this.gallery.id)
       )
     }
   },
   watch: {
-    gallery: {
+    '$route.params.gid': {
       handler(to) {
-        if (to === null) this.$router.push({ path: '/galleries' })
+        this.loadGallery(to)
       },
       immediate: true
     }
   },
   mounted() {
-    if (this.$route.params.gid) this.read(this.$route.params.gid)
-    else this.$router.push({ path: '/galleries' })
+    this.loadGallery(this.$route.params.gid)
   },
   methods: {
     ...mapActions('galleries', { read: 'read' }),
-    cancel() {
-      this.$router.push('/galleries')
+    loadGallery(gid) {
+      if (!gid) this.$router.push('/galleries')
+      else if (!this.gallery || this.gallery.id !== gid) {
+        this.read(gid)
+      }
     }
   }
 }

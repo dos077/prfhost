@@ -1,9 +1,9 @@
 <template>
   <v-card outlined style="margin: 2rem auto; max-width: 480px" class="pa-2">
-    <v-card-title>No Gallery Selected</v-card-title>
+    <v-card-title>No Project Selected</v-card-title>
     <v-card-actions>
-      <v-btn :disabled="pending" color="success" @click="newGallery">
-        <v-icon>mdi-plus</v-icon>new gallery
+      <v-btn :disabled="pending" color="success" @click="create">
+        <v-icon>mdi-plus</v-icon>new project
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -18,15 +18,14 @@ export default {
     pending: false
   }),
   computed: {
-    ...mapState('galleries', ['current'])
+    ...mapState('profolio', ['current'])
   },
   methods: {
-    ...mapActions('galleries', ['createBlank']),
-    async newGallery() {
+    ...mapActions('profolio', ['createBlank']),
+    async create() {
       this.pending = true
       await this.createBlank()
-      console.log('gallery created', this.current.id)
-      this.$router.push(`/galleries/edit/${this.current.id}`)
+      this.$router.push(`/profolio/edit/${this.current.id}`)
       this.pending = false
     }
   }
