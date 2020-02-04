@@ -11,10 +11,12 @@ export default ({ loadCollectionDB }) => {
     },
 
     read: async ({ rootState, commit }, id) => {
+      commit('setCreationPending', true)
       const collectionDB = loadCollectionDB({ rootState })
 
       const item = await collectionDB.read(id)
       commit('setCurrent', item)
+      commit('setCreationPending', false)
     },
 
     /**
@@ -26,6 +28,7 @@ export default ({ loadCollectionDB }) => {
       commit('setCreationPending', true)
       const created = await collectionDB.create(item)
       commit('add', created)
+      commit('setCurrent', created)
       commit('setCreationPending', false)
     },
 
@@ -46,10 +49,10 @@ export default ({ loadCollectionDB }) => {
 
       const collectionDB = loadCollectionDB({ rootState })
 
-      commit('addUpdatePending', id)
+      commit('addDeletionPending', id)
       await collectionDB.delete(id)
       commit('removeById', id)
-      commit('removeUpdatePending', id)
+      commit('removeDeletionPending', id)
     }
   }
 }

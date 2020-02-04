@@ -1,5 +1,5 @@
 <template>
-  <v-card outlined :loading="loading || imgSrc === ''">
+  <v-card outlined :loading="loading">
     <v-dialog v-model="dConfirm" :width="isDesktop ? '500px' : '80vw'">
       <v-card dark="" :loading="loading">
         <v-card-title> Press confirm to delete {{ image.title }} </v-card-title>
@@ -13,23 +13,36 @@
     <v-img
       :aspect-ratio="isDesktop ? '1.67' : '2.2'"
       width="100%"
-      :src="imgSrc"
+      :src="image.src"
       class="align-start text-right pa-1"
     >
-      <v-btn color="red" dark icon @click="dConfirm = true">
+      <v-btn color="red" dark icon :disabled="loading" @click="dConfirm = true">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-img>
     <v-card-text>
-      <v-text-field :value="image.title" label="title" @input="inputTitle" />
-      <v-text-field
-        :value="image.caption"
-        label="caption"
-        @input="inputCaption"
-      />
+      <v-form @submit.prevent="saveImage">
+        <v-text-field
+          :value="image.title"
+          :disabled="loading"
+          label="title"
+          @input="inputTitle"
+        />
+        <v-text-field
+          :value="image.caption"
+          label="caption"
+          :disabled="loading"
+          @input="inputCaption"
+        />
+      </v-form>
     </v-card-text>
     <v-card-actions>
-      <v-btn v-if="newTitle || newCap" color="green" dark @click="saveImage"
+      <v-btn
+        v-if="newTitle || newCap"
+        color="green"
+        :disabled="loading"
+        dark
+        @click="saveImage"
         >save <v-icon>mdi-content-save</v-icon>
       </v-btn>
     </v-card-actions>
@@ -37,7 +50,6 @@
 </template>
 
 <script>
-import storage from '@/helpers/galleries/storage'
 import { mapActions } from 'vuex'
 
 export default {
@@ -47,7 +59,6 @@ export default {
     loading: Boolean
   },
   data: () => ({
-    imgSrc: '',
     dConfirm: false,
     newTitle: null,
     newCap: null
@@ -56,9 +67,6 @@ export default {
     isDesktop() {
       return this.$vuetify.breakpoint.lgAndUp
     }
-  },
-  async mounted() {
-    this.imgSrc = await storage.downUrl(this.image.path)
   },
   methods: {
     ...mapActions('galleries', ['deleteImage', 'updateImage']),

@@ -21,18 +21,16 @@ export default () => ({
     state.items.splice(index, 1)
   },
 
-  addUpdatePending: (state, id) => state.deletionPending.push(id),
+  addUpdatePending: (state, id) => state.updatePending.push(id),
 
   removeUpdatePending: (state, id) => {
-    const index = state.updatePending.findIndex(i => i === id)
-    state.updatePending.splice(index, 1)
+    state.updatePending = state.updatePending.filter(i => i !== id)
   },
 
   addDeletionPending: (state, id) => state.deletionPending.push(id),
 
   removeDeletionPending: (state, id) => {
-    const index = state.deletionPending.findIndex(i => i === id)
-    state.deletionPending.splice(index, 1)
+    state.deletionPending = state.deletionPending.filter(i => i !== id)
   },
 
   setCreationPending: (state, value) => (state.creationPending = value)

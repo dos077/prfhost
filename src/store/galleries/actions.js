@@ -1,79 +1,62 @@
-import storage from '@/helpers/galleries/storage'
+import initStorage from '@/firebase/storage'
+import { buildSubPath, checkPath } from '@/firebase/storage/galleriesPath'
 
-export default ({ loadCollectionDB }) => ({
-  createBlank: async ({ rootState, commit }) => {
+export default () => ({
+  createBlank: async ({ dispatch }) => {
     const blank = { name: 'Untitled', images: null }
-    commit('setCreationPending', true)
-
-    const collectionDB = loadCollectionDB({ rootState })
-    const created = await collectionDB.create(blank)
-
-    commit('add', created)
-    commit('setCurrent', created)
-    commit('setCreationPending', false)
+    return dispatch('create', blank)
   },
-  addImage: async ({ state, rootState, commit }, imgFile) => {
-    const userId = rootState.authentication.user.id
-    const { name, id, createTimestamp } = state.current
-    commit('addUpdatePending', id)
+  addImage: async ({ state, rootState, commit, dispatch }, imgFile) => {
+    const { current } = state
+    const storage = await initStorage({ rootState })
+    const subPath = buildSubPath({ gallery: current })
+    await storage.validateImg(imgFile, subPath)
+    await checkPath({ gallery: current, storage })
 
-    const uploadedImg = await storage.upload({ imgFile, userId })
-    const images = state.current.images
-      ? [uploadedImg, ...state.current.images]
+    commit('addUpdatePending', current.id)
+    const uploadedImg = await storage.upload({ imgFile, subPath })
+    const clone = { ...current }
+    clone.images = current.images
+      ? [uploadedImg, ...current.images]
       : [uploadedImg]
 
-    const collectionDB = loadCollectionDB({ rootState })
-
-    const updated = await collectionDB.update({
-      id,
-      name,
-      createTimestamp,
-      images
-    })
-    commit('update', updated)
-    commit('removeUpdatePending', id)
+    commit('removeUpdatePending', current.id)
+    return dispatch('update', clone)
   },
-  updateImage: async (
-    { state, rootState, commit },
-    { path, title, caption }
-  ) => {
-    const { name, id, createTimestamp } = state.current
-    commit('addUpdatePending', id)
-
-    const images = state.current.images.map(img => {
+  updateImage: async ({ state, dispatch }, { path, title, caption }) => {
+    const clone = { ...state.current }
+    clone.images = state.current.images.map(img => {
       if (img.path !== path) return img
       const newImg = { ...img }
       if (title) newImg.title = title
       if (caption) newImg.caption = caption
       return newImg
     })
-    const collectionDB = loadCollectionDB({ rootState })
-
-    const updated = await collectionDB.update({
-      id,
-      name,
-      createTimestamp,
-      images
-    })
-    commit('update', updated)
-    commit('removeUpdatePending', id)
+    return dispatch('update', clone)
   },
-  deleteImage: async ({ state, rootState, commit }, { path }) => {
-    const { name, id, createTimestamp } = state.current
-    const images = state.current.images.filter(img => img.path !== path)
-    commit('addUpdatePending', id)
+  deleteImage: async ({ state, rootState, commit, dispatch }, { path }) => {
+    const { current } = state
+    commit('addUpdatePending', current.id)
 
+    const storage = await initStorage({ rootState })
     storage.destroy({ path })
+    const clone = { ...current }
+    clone.images = current.images.filter(img => img.path !== path)
 
-    const collectionDB = loadCollectionDB({ rootState })
+    commit('removeUpdatePending', current.id)
 
-    const updated = await collectionDB.update({
-      id,
-      name,
-      createTimestamp,
-      images
-    })
-    commit('update', updated)
-    commit('removeUpdatePending', id)
+    return dispatch('update', clone)
+  },
+  deleteGallery: async ({ rootState, dispatch }, gallery) => {
+    const { id } = gallery
+
+    if (gallery.images) {
+      const storage = await initStorage({ rootState })
+      gallery.images.forEach(({ path }) => {
+        storage.destroy({ path })
+      })
+    }
+
+    dispatch('delete', id)
   }
 })

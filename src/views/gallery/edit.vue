@@ -1,5 +1,8 @@
 <template>
   <div>
+    <v-overlay :value="loading" absolute>
+      <v-progress-circular indeterminate />
+    </v-overlay>
     <gallery-form :gallery="gallery" :loading="loading" />
     <image-grid :gallery="gallery" :loading="loading" />
   </div>
