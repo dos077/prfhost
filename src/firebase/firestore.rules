@@ -1,25 +1,37 @@
+rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
   function authenticated() { return request.auth.uid != null }
   
     match /users/{userId} {
-       allow get: if authenticated() && request.auth.uid == userId;
+       allow get;
        allow create: if authenticated() && request.auth.uid == userId;
        allow update, delete: if authenticated() && request.auth.uid == userId;
     }
 
     match /users/{userId}/profolio/{projectId} {
-      allow get: if authenticated() && request.auth.uid == userId;
-			allow list: if authenticated() && request.auth.uid == userId;
+      allow get, list;
+      allow create: if authenticated() && request.auth.uid == userId;
+      allow update, delete: if authenticated() && request.auth.uid == userId;
+    }
+
+    match /users/{userId}/profile/{profileId} {
+      allow get, list;
       allow create: if authenticated() && request.auth.uid == userId;
       allow update, delete: if authenticated() && request.auth.uid == userId;
     }
 
     match /users/{userId}/galleries/{galleryId} {
-      allow get: if authenticated() && request.auth.uid == userId;
-			allow list: if authenticated() && request.auth.uid == userId;
+      allow get, list;
       allow create: if authenticated() && request.auth.uid == userId;
       allow update, delete: if authenticated() && request.auth.uid == userId;
+    }
+
+    match /alias/{alias} {
+      allow get;
+      allow create: if authenticated() && !exists(/databases/$(database)/documents/alias/$(alias));
+      allow update, delete: if authenticated()
+      	&& request.auth.uid == get(/databases/$(database)/documents/alias/$(alias)).data.userId
     }
   }
 }

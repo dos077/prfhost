@@ -1,6 +1,11 @@
-const acceptableTypes = ['image/jpeg', 'image/png', 'bmp']
+const acceptableTypes = ['image/jpeg', 'image/png', 'bmp', 'image/webp']
 
-const maxSize = 3 * 1024 * 1024
+const maxSize = 1.5 * 1024 * 1024
+
+const galleryImageLimit = 12
+
+const sectionLimit = 4
+const sectionImageLimit = 4
 
 const imageRules = [
   value =>
@@ -13,4 +18,11 @@ const imageRules = [
     `wrong image type, only ${acceptableTypes.join(', ')}`
 ]
 
-export { acceptableTypes, maxSize, imageRules }
+export {
+  acceptableTypes,
+  maxSize,
+  imageRules,
+  galleryImageLimit,
+  sectionLimit,
+  sectionImageLimit
+}

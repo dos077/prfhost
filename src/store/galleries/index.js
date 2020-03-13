@@ -5,6 +5,8 @@ import config from './config'
 const { state, mutations, actions, getters } = buildModule(config)
 const customActions = buildActions(config)
 
+state.collectionName = 'galleries'
+
 export default {
   namespaced: true,
   state,

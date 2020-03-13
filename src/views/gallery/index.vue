@@ -1,5 +1,5 @@
 <template>
-  <nav-content title="Gallery" :bg-color="'#616161'">
+  <nav-content :title="collectionName" :bg-color="color">
     <template v-slot:nav>
       <v-tabs
         :vertical="isDesktop"
@@ -34,7 +34,11 @@ export default {
   components: { NavContent },
   computed: {
     ...mapGetters('galleries', ['isDeletionPending']),
-    ...mapState('galleries', { galleries: 'items' }),
+    ...mapState('galleries', {
+      galleries: 'items',
+      collectionName: 'collectionName',
+      color: 'color'
+    }),
     ...mapState('app', ['networkOnline']),
     isDesktop() {
       return this.$vuetify.breakpoint.mdAndUp

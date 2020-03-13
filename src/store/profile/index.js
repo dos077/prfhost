@@ -1,6 +1,6 @@
 import buildModule from '@/store/buildModule'
-import buildActions from './actions'
 import config from './config'
+import buildActions from './actions'
 
 const { state, mutations, actions, getters } = buildModule(config)
 const customActions = buildActions(config)

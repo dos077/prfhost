@@ -1,3 +1,5 @@
+import presetColors from '@/helpers/presetColors'
+
 export default ({ loadCollectionDB }) => {
   /**
    * Fetch of current loggedin user
@@ -30,6 +32,35 @@ export default ({ loadCollectionDB }) => {
       commit('add', created)
       commit('setCurrent', created)
       commit('setCreationPending', false)
+    },
+
+    rename: async ({ rootState, state, commit }, { name }) => {
+      if (!name || typeof name !== 'string') throw Error('Name is not a string')
+      const srr = name.match(/[\w\s]/g)
+      if (srr.length > 11) throw Error('Name too long')
+
+      const newMeta = { name: srr.join(''), color: state.color }
+      const collectionDB = loadCollectionDB({ rootState })
+      await collectionDB.updateMeta(newMeta)
+      commit('setName', name)
+    },
+
+    setColor: async ({ rootState, state, commit }, { color }) => {
+      if (!color || !presetColors.includes(color))
+        throw Error('Color is not in material palette')
+      const collectionDB = loadCollectionDB({ rootState })
+      const meta = { name: state.collectionName, color }
+      await collectionDB.updateMeta(meta)
+      commit('setColor', color)
+    },
+
+    readMeta: async ({ rootState, commit }) => {
+      const collectionDB = loadCollectionDB({ rootState })
+      const meta = await collectionDB.getMeta()
+      if (meta) {
+        if (meta.name) commit('setName', meta.name)
+        if (meta.color) commit('setColor', meta.color)
+      }
     },
 
     update: async ({ rootState, commit }, item) => {

@@ -1,4 +1,4 @@
-const galleryImageLimit = 12
+import { galleryImageLimit } from '@/helpers/storage/imageFile'
 
 const buildSubPath = ({ gallery }) => `galleries/${gallery.id}/`
 

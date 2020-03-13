@@ -1,12 +1,18 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="drawerOn" app dark color="#212121">
+    <v-navigation-drawer
+      v-if="user"
+      v-model="drawerOn"
+      app
+      dark
+      color="#212121"
+    >
       <v-list>
         <v-list-item link to="/galleries">
-          Photography
+          {{ galleriesName }}
         </v-list-item>
         <v-list-item link to="/profolio">
-          Web Development
+          {{ profolioName }}
         </v-list-item>
         <v-list-item link to="/account">
           Account
@@ -26,6 +32,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 import TitleBar from './views/components/TitleBar.vue'
 
 export default {
@@ -40,9 +47,31 @@ export default {
   }),
 
   computed: {
+    ...mapState('authentication', ['user']),
+    ...mapState('profolio', { profolioName: 'collectionName' }),
+    ...mapState('galleries', { galleriesName: 'collectionName' }),
     isDesktop() {
       return this.$vuetify.breakpoint.mdAndUp
     }
+  },
+
+  watch: {
+    user: {
+      handler(to) {
+        if (to) {
+          this.getProfolioMeta()
+          this.getGalleriesMeta()
+          this.getProfileMeta()
+        }
+      },
+      immediate: true
+    }
+  },
+
+  methods: {
+    ...mapActions('profolio', { getProfolioMeta: 'readMeta' }),
+    ...mapActions('galleries', { getGalleriesMeta: 'readMeta' }),
+    ...mapActions('profile', { getProfileMeta: 'readMeta' })
   }
 }
 </script>

@@ -4,6 +4,8 @@ import authentication from './authentication'
 import app from './app'
 import galleries from './galleries'
 import profolio from './profolio'
+import alias from './alias'
+import profile from './profile'
 
 Vue.use(Vuex)
 
@@ -15,6 +17,8 @@ export default new Vuex.Store({
     authentication,
     app,
     galleries,
-    profolio
+    profolio,
+    alias,
+    profile
   }
 })

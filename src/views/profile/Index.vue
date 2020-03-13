@@ -1,5 +1,5 @@
 <template>
-  <nav-content title="Account" :bg-color="'#4A148C'">
+  <nav-content title="Account" :bg-color="color">
     <template v-slot:nav>
       <v-tabs
         :vertical="isDesktop"
@@ -10,7 +10,7 @@
         style="justify-content: center;"
       >
         <v-tab>Profile</v-tab>
-        <v-tab>Logout</v-tab>
+        <v-tab @click="clickLogout">Logout</v-tab>
       </v-tabs>
     </template>
     <template v-slot:content>
@@ -24,46 +24,23 @@
           </v-card-text>
         </v-card>
       </v-overlay>
-      <v-container v-if="user" style="max-width: 1280px">
-        <v-row>
-          <v-col cols="12" style="text-align: center">
-            <v-avatar height="120" width="120" style="margin: 0 auto 2rem">
-              <img :src="user.photoURL" />
-            </v-avatar>
-            <h1 class="headline">{{ user.displayName }}</h1>
-            <h2 class="subtitle-1" style="color: #616161;">{{ user.email }}</h2>
-            <v-card
-              style="max-width: 480px; margin: 2rem auto; background-color: rgba(0,0,0,0)"
-              outlined
-            >
-              <v-card-title>
-                Profile Customization
-              </v-card-title>
-              <v-card-text>
-                <v-form>
-                  <v-text-field
-                    label="Alias"
-                    hint="an alias for web directory"
-                  />
-                </v-form>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
+      <alias-form />
     </template>
   </nav-content>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
+import { isNil } from 'lodash'
 import firebase from 'firebase/app'
 import NavContent from '@/views/components/NavContent.vue'
+import AliasForm from './_form.vue'
 
 export default {
   name: 'UserProfile',
   components: {
-    NavContent
+    NavContent,
+    AliasForm
   },
   data: () => ({
     loginError: null
@@ -73,9 +50,24 @@ export default {
       return this.$vuetify.breakpoint.mdAndUp
     },
     ...mapState('app', ['networkOnLine', 'appTitle']),
-    ...mapState('authentication', ['user'])
+    ...mapState('authentication', ['user']),
+    ...mapState('profile', ['color'])
+  },
+  watch: {
+    user: {
+      handler(user) {
+        if (!isNil(user)) {
+          const redirectUrl = isNil(this.$route.query.redirectUrl)
+            ? '/account'
+            : this.$route.query.redirectUrl
+          this.$router.push(redirectUrl)
+        }
+      },
+      immediate: true
+    }
   },
   methods: {
+    ...mapActions('authentication', ['logout']),
     ...mapMutations('authentication', ['setUser']),
     async login() {
       this.loginError = null
@@ -87,13 +79,17 @@ export default {
         // but we can't use it on mobile because it's not well supported
         // when app is running as standalone on ios & android
         // eslint-disable-next-line no-unused-expressions
-        this.isDekstop
-          ? await firebase.auth().signInWithPopup(provider)
-          : await firebase.auth().signInWithRedirect(provider)
+        const res = await firebase.auth().signInWithRedirect(provider)
+        console.log(res)
       } catch (err) {
         this.loginError = err
         this.setUser(null)
       }
+    },
+    async clickLogout() {
+      await firebase.auth().signOut()
+      await this.logout()
+      this.$router.push('/')
     }
   }
 }

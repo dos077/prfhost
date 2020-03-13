@@ -1,13 +1,18 @@
 <template>
-  <div class="title-bar" style="background-color: #212121;">
+  <div v-if="user" class="title-bar" style="background-color: #212121;">
     <v-app-bar-nav-icon large dark @click="$emit('toggleDrawer')">
     </v-app-bar-nav-icon>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
-  name: 'TitleBar'
+  name: 'TitleBar',
+  computed: {
+    ...mapState('authentication', ['user'])
+  }
 }
 </script>
 

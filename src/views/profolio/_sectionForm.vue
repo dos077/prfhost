@@ -14,14 +14,26 @@
     <v-toolbar color="primary" dark>
       <v-file-input
         v-model="newFile"
+        :disabled="imageLimitReached || sectionLimitReached"
         prepend-icon="mdi-camera"
         single-line
         class="mr-4"
         hide-details
         label="Add Image"
         :rules="imageRules"
-      />
-      <v-btn outlined :disabled="loading" @click="upload">upload</v-btn>
+      >
+        <template v-slot:append>
+          <span class="caption">
+            {{ uploaderMsg }}
+          </span>
+        </template>
+      </v-file-input>
+      <v-btn
+        outlined
+        :disabled="loading || imageLimitReached || sectionLimitReached"
+        @click="upload"
+        >upload</v-btn
+      >
     </v-toolbar>
     <v-alert v-if="storageError" color="red lighten-4" class="ma-2">
       {{ storageError }}
@@ -77,8 +89,12 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-import { imageRules } from '@/helpers/storage/imageFile'
+import { mapActions, mapState } from 'vuex'
+import {
+  imageRules,
+  sectionLimit,
+  sectionImageLimit
+} from '@/helpers/storage/imageFile'
 
 export default {
   name: 'SectionForm',
@@ -94,8 +110,33 @@ export default {
     storageError: null
   }),
   computed: {
+    ...mapState('profolio', { project: 'current' }),
     imageOnly() {
       return this.section.images && this.section.images.length > 1
+    },
+    nImages() {
+      return this.section.images ? this.section.images.length : 0
+    },
+    imageLimitReached() {
+      return this.nImages >= sectionImageLimit
+    },
+    nImageSections() {
+      if (!this.project || !this.project.sections) return 0
+      const imagedSections = this.project.sections.filter(
+        s => s.images && s.images.length > 0
+      )
+      return imagedSections.length || 0
+    },
+    sectionLimitReached() {
+      return (
+        this.nImageSections >= sectionLimit &&
+        (!this.section.images || this.section.images.length === 0)
+      )
+    },
+    uploaderMsg() {
+      if (this.sectionLimitReached)
+        return `maximum of ${sectionLimit} sections with image limit`
+      return `${this.nImages}/${sectionImageLimit} slots`
     }
   },
   methods: {

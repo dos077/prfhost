@@ -22,13 +22,25 @@
       <v-card-text>
         <v-file-input
           v-model="imageFile"
-          accept="image/jpeg"
-          placeholder="select a file for upload"
+          :accept="acceptableTypes"
+          placeholder="select image file for upload"
+          :disabled="limitReached"
           label="Upload Image"
           prepend-icon="mdi-camera"
           :rules="imageRules"
-        />
-        <v-btn color="blue" text :disabled="loading" @click="upload">
+        >
+          <template v-slot:append>
+            <span class="caption" :class="{ 'red lighten-2': limitReached }">
+              {{ uploaderMsg }}
+            </span>
+          </template>
+        </v-file-input>
+        <v-btn
+          color="blue"
+          text
+          :disabled="loading || limitReached"
+          @click="upload"
+        >
           upload
         </v-btn>
       </v-card-text>
@@ -66,7 +78,11 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import { imageRules } from '@/helpers/storage/imageFile'
+import {
+  imageRules,
+  galleryImageLimit,
+  acceptableTypes
+} from '@/helpers/storage/imageFile'
 
 export default {
   name: 'GalleryForm',
@@ -80,10 +96,20 @@ export default {
     uploading: false,
     dConfirm: false,
     storageError: null,
-    imageRules
+    imageRules,
+    acceptableTypes: acceptableTypes.join(',')
   }),
   computed: {
-    ...mapState('authentication', ['user'])
+    ...mapState('authentication', ['user']),
+    nImages() {
+      return this.gallery.images ? this.gallery.images.length : 0
+    },
+    uploaderMsg() {
+      return `${this.nImages}/${galleryImageLimit} slots used`
+    },
+    limitReached() {
+      return this.nImages >= galleryImageLimit
+    }
   },
   methods: {
     ...mapActions('galleries', {

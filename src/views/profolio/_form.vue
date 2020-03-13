@@ -23,7 +23,7 @@
         <v-file-input
           ref="imgFileInput"
           v-model="imageFile"
-          accept="image/jpeg"
+          :accept="acceptableTypes"
           placeholder="select a file for upload"
           label="Change Banner Image"
           prepend-icon="mdi-camera"
@@ -85,7 +85,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import { imageRules } from '@/helpers/storage/imageFile'
+import { imageRules, acceptableTypes } from '@/helpers/storage/imageFile'
 
 export default {
   name: 'ProjectForm',
@@ -101,7 +101,8 @@ export default {
     uploading: false,
     dConfirm: false,
     imageRules,
-    storageError: null
+    storageError: null,
+    acceptableTypes: acceptableTypes.join(',')
   }),
   computed: {
     ...mapState('authentication', ['user']),

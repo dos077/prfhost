@@ -30,7 +30,7 @@
             <!-- Auth UI -->
             <v-btn
               light
-              :disabled="user === undefined || user || !networkOnLine"
+              :disabled="user === undefined || !!user || !networkOnLine"
               data-test="login-btn"
               large
               @click="login"

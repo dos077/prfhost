@@ -1,5 +1,5 @@
 <template>
-  <nav-content title="Profolio" :bg-color="'#EF6C00'">
+  <nav-content :title="collectionName" :bg-color="color">
     <template v-slot:nav>
       <v-tabs
         :vertical="isDesktop"
@@ -33,7 +33,11 @@ export default {
   name: 'Profolio',
   components: { NavContent },
   computed: {
-    ...mapState('profolio', { profolio: 'items' }),
+    ...mapState('profolio', {
+      profolio: 'items',
+      collectionName: 'collectionName',
+      color: 'color'
+    }),
     ...mapState('app', ['networkOnline']),
     isDesktop() {
       return this.$vuetify.breakpoint.mdAndUp

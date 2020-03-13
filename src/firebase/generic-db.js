@@ -42,6 +42,22 @@ export default class GenericDB {
     }
   }
 
+  async updateMeta(newMeta) {
+    await (await firestore())
+      .collection(this.collectionPath)
+      .doc('meta')
+      .set(newMeta)
+  }
+
+  async getMeta() {
+    const res = await (await firestore())
+      .collection(this.collectionPath)
+      .doc('meta')
+      .get()
+    const data = res.exists ? res.data() : null
+    return data
+  }
+
   /**
    * Read a document in the collection
    * @param id
@@ -75,12 +91,14 @@ export default class GenericDB {
     }
 
     const formatResult = result =>
-      result.docs.map(ref =>
-        this.convertObjectTimestampPropertiesToDate({
-          id: ref.id,
-          ...ref.data()
-        })
-      )
+      result.docs
+        .filter(doc => doc.id !== 'meta')
+        .map(ref =>
+          this.convertObjectTimestampPropertiesToDate({
+            id: ref.id,
+            ...ref.data()
+          })
+        )
 
     return query.get().then(formatResult)
   }

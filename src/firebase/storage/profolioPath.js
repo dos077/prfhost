@@ -1,5 +1,4 @@
-const sectionLimit = 4
-const sectionImageLimit = 4
+import { sectionLimit, sectionImageLimit } from '@/helpers/storage/imageFile'
 
 const buildProjectPath = ({ project }) => `profolio/${project.id}`
 

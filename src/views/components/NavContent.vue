@@ -3,7 +3,7 @@
     id="maindiv"
     :class="{ content: true, vertical: !isDesktop, horizontal: isDesktop }"
   >
-    <section class="nav" :style="`background-color: ${bgColor}`">
+    <section class="nav" :class="`${bgColor} darken-2`">
       <v-card flat dark color="rgba(0, 0, 0, 0)">
         <v-card-title>
           <h1 class="display-2 mb-4">
