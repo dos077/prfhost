@@ -39,7 +39,9 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: () =>
-        import(/* webpackChunkName: "client-chunk-login" */ '@/views/Login.vue'),
+        import(
+          /* webpackChunkName: "client-chunk-login" */ '@/views/Login.vue'
+        ),
       meta: {
         authNotRequired: true
       }
@@ -48,12 +50,16 @@ const router = new Router({
       path: '/account',
       name: 'account',
       component: () =>
-        import(/* webpackChunkName: "client-chunk-account" */ '@/views/profile/Index.vue')
+        import(
+          /* webpackChunkName: "client-chunk-account" */ '@/views/profile/Index.vue'
+        )
     },
     {
       path: '/galleries',
       component: () =>
-        import(/* webpackChunkName: "client-chunk-galleries" */ '@/views/gallery/index.vue'),
+        import(
+          /* webpackChunkName: "client-chunk-galleries" */ '@/views/gallery/index.vue'
+        ),
       children: [
         {
           path: '',
@@ -70,7 +76,9 @@ const router = new Router({
     {
       path: '/profolio',
       component: () =>
-        import(/* webpackChunkName: "client-chunk-profolio" */ '@/views/profolio/index.vue'),
+        import(
+          /* webpackChunkName: "client-chunk-profolio" */ '@/views/profolio/index.vue'
+        ),
       children: [
         {
           path: '',
@@ -83,8 +91,8 @@ const router = new Router({
           component: () => import('@/views/profolio/edit.vue')
         }
       ]
-    }
-    // { path: '*', redirect: '/home' }
+    },
+    { path: '*', redirect: '/home' }
   ]
 })
 

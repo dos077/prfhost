@@ -1,5 +1,5 @@
 <template>
-  <h1 class="loading-title">
+  <h1 class="loading-title" style="grid-column: span 2;">
     Loading...
   </h1>
 </template>

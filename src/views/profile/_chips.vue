@@ -8,6 +8,9 @@
     />
     <v-toolbar color="blue darken-2" dark>
       <v-toolbar-items>
+        <v-btn v-if="changes" icon @click="saveChanges">
+          <v-icon>mdi-content-save</v-icon>
+        </v-btn>
         <v-text-field
           :value="nameDisplay"
           single-line
@@ -18,8 +21,12 @@
         />
       </v-toolbar-items>
       <v-spacer />
-      <v-btn v-if="changes" icon @click="saveChanges">
-        <v-icon>mdi-content-save</v-icon>
+      <v-btn icon @click="downPriority">
+        <v-icon>mdi-minus</v-icon>
+      </v-btn>
+      {{ newPriority ? newPriority : 0 }}
+      <v-btn icon @click="upPriority">
+        <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-toolbar>
     <v-card-text>
@@ -39,6 +46,7 @@
           v-for="(c, index) in newChips"
           :key="index"
           color="green lighten-4"
+          class="ma-2"
           close
           @click:close="newChips.splice(index, 1)"
         >
@@ -92,6 +100,7 @@ export default {
     newIcon: null,
     newText: null,
     newName: null,
+    newPriority: null,
     confirmScreen: false
   }),
   computed: {
@@ -99,12 +108,16 @@ export default {
       return (
         (!!this.newChips && this.newChips.length > 0) ||
         !!this.newName ||
-        this.deleteIndices.length > 0
+        this.deleteIndices.length > 0 ||
+        this.newPriority !== this.section.priority
       )
     },
     nameDisplay() {
       return this.newName || this.section ? this.section.name : ''
     }
+  },
+  mounted() {
+    this.newPriority = this.section.priority || undefined
   },
   methods: {
     ...mapActions('profile', {
@@ -123,6 +136,14 @@ export default {
         this.newText = null
       }
     },
+    upPriority() {
+      if (!this.newPriority) this.newPriority = 1
+      else this.newPriority += 1
+    },
+    downPriority() {
+      if (!this.newPriority) this.newPriority = -1
+      else this.newPriority -= 1
+    },
     async saveChanges() {
       const clone = { ...this.section }
       let chips = null
@@ -139,6 +160,7 @@ export default {
       }
       clone.chips = chips
       if (this.newName) clone.name = this.newName
+      if (this.newPriority) clone.priority = this.newPriority
       await this.updateSection(clone)
       this.newChips = []
       this.deleteIndices = []

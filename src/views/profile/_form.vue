@@ -77,7 +77,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col v-for="section in sections" :key="section.id" cols="12">
+      <v-col v-for="section in sortedSections" :key="section.id" cols="12">
         <chips-form v-if="section.chips" :section="section" />
         <lines-form v-if="section.lines" :section="section" />
       </v-col>
@@ -128,6 +128,14 @@ export default {
         this.aliasDeleting.length > 0 ||
         this.sectionDeleting.length > 0
       )
+    },
+    sortedSections() {
+      if (!this.sections) return []
+      return [...this.sections].sort((a, b) => {
+        const aPrio = a.priority ? a.priority : 0
+        const bPrio = b.priority ? b.priority : 0
+        return bPrio - aPrio
+      })
     }
   },
   watch: {
