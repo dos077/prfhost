@@ -2,8 +2,13 @@
   <v-container fill-height style="grid-column: span 2;">
     <v-row align-content="center" justify="center" style="height:100%;">
       <v-col cols="12" class="text-center">
-        <v-card tile max-width="480" style="margin: 0 auto;">
-          <v-toolbar color="#424242" dark flat>
+        <v-card
+          tile
+          max-width="480"
+          style="margin: 0 auto;"
+          color="orange lighten-5"
+        >
+          <v-toolbar color="blue darken-4" dark flat>
             <v-toolbar-title class="ttl">
               Sign In Required
             </v-toolbar-title>

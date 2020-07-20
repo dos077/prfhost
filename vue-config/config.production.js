@@ -21,5 +21,6 @@ module.exports = {
         routes: prerenderedRoutesList
       })
     ]
-  }
+  },
+  publicPath: '/prfhost/'
 }
