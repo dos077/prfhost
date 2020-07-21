@@ -22,7 +22,7 @@
               </p>
             </v-col>
             <v-col :cols="lgCols" class="image-block">
-              <img class="frame elevation-2" src="/img/profolio.jpg" />
+              <img class="frame elevation-2" src="./img/profolio.jpg" />
             </v-col>
           </v-row>
         </v-container>
@@ -36,7 +36,7 @@
               <p class="body">Bold but soothing visual palatte for great legitability without fatiquing contrast. Contrasting fonts for distinctive UI without visual clutters. This is an app design by a user and meant to be used by anyone, anytime, day or night.</p>
             </v-col>
             <v-col :cols="lgCols" order-sm="1" class="image-block alternate">
-              <img src="/img/tablet.jpg" class="frame elevation-2" />
+              <img src="./img/tablet.jpg" class="frame elevation-2" />
             </v-col>
           </v-row>
         </v-container>
