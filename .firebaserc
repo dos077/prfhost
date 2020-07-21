@@ -1,6 +1,0 @@
-{
-  "projects": {
-    "default": "bento-starter",
-    "test": "prf-test"
-  }
-}
