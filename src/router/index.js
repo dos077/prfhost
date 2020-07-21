@@ -17,10 +17,10 @@ Vue.use(Head, {
 
 const router = new Router({
   mode: 'history',
-  base: '/',
+  base: process.env.BASE_URL,
   routes: [
     {
-      path: '/home',
+      path: '/',
       name: 'home',
       component: Home,
       meta: {
@@ -92,7 +92,7 @@ const router = new Router({
         }
       ]
     },
-    { path: '*', redirect: '/home' }
+    { path: '*', redirect: '/' }
   ]
 })
 

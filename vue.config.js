@@ -1,11 +1,7 @@
 module.exports = {
   pwa: {
-    themeColor: '#FFFFFF',
-    appleMobileWebAppStatusBarStyle: 'black',
-    workboxPluginMode: 'InjectManifest',
-    workboxOptions: {
-      swSrc: 'public/service-worker.js'
-    }
+    name: 'P(r)f',
+    themeColor: '#FFCCBC'
   },
-  transpileDependencies: ['vuetify']
+  publicPath: '/prfhost/'
 }
