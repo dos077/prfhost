@@ -1,4 +1,4 @@
-importScripts("/precache-manifest.a254ecbb1c8815b736c324dbc9a5bc8b.js", "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
+importScripts("/prfhost/precache-manifest.2f3612e6e7d757eaf54454925cae92d7.js", "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 workbox.core.setCacheNameDetails({ prefix: 'bento-starter' })
 
