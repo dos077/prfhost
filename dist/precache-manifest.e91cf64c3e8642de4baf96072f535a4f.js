@@ -40,7 +40,7 @@ self.__precacheManifest = [
     "url": "/prfhost/js/chunk-374d2806.8eaa13fd.js"
   },
   {
-    "revision": "f024efaf762fb7eaaf3092880671d2d8",
+    "revision": "90bf7a96d4317a663460f5b109641d35",
     "url": "/prfhost/index.html"
   },
   {
@@ -68,8 +68,8 @@ self.__precacheManifest = [
     "url": "/prfhost/js/client-chunk-login.df325f86.js"
   },
   {
-    "revision": "7c11c5e8ca9a096dc2b4",
-    "url": "/prfhost/js/app.8a8d5f1c.js"
+    "revision": "243e2d33b212724e11d4",
+    "url": "/prfhost/js/app.fb5aa667.js"
   },
   {
     "revision": "81e9ee974a722db08bb0",
@@ -128,8 +128,8 @@ self.__precacheManifest = [
     "url": "/prfhost/css/chunk-1006a6c1.6d69d993.css"
   },
   {
-    "revision": "7c11c5e8ca9a096dc2b4",
-    "url": "/prfhost/css/app.308e76e8.css"
+    "revision": "243e2d33b212724e11d4",
+    "url": "/prfhost/css/app.075aef89.css"
   },
   {
     "revision": "d41d8cd98f00b204e9800998ecf8427e",
