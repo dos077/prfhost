@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/prfhost/precache-manifest.eb7d8450ed415dfb3b6a08f7b5c7d136.js"
+  "/precache-manifest.a8a1be2d1bcab18a3590428907e2472e.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "prfhost"});

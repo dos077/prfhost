@@ -3,5 +3,5 @@ module.exports = {
     name: 'P(r)f',
     themeColor: '#FFCCBC'
   },
-  publicPath: '/prfhost/'
+  publicPath: process.env.NODE_ENV === 'production' ? '/' : './'
 }
